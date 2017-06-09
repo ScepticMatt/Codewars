@@ -27,7 +27,7 @@ class Magnets
 {
 public:
     static double doubles(int maxk, int maxn);
-public:
+private:
     static double v(int k, int n){
         return 1./(std::pow(1. + n, 2*k)*k);
     }
