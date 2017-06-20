@@ -24,8 +24,22 @@ finance(6) --> 168
 finance(7) --> 252
 finance(5000) --> 62537505000
 #Hint: try to avoid nested loops*/
+// why use a class here?
 class Finance
 {
-  public:
-  static unsigned long long finance(unsigned long long n);
+public:
+	static unsigned long long finance(unsigned long long n){
+		unsigned long long term=0, result = 0, index = 0;
+		for (unsigned long long week = 0; week <=n; ++week, ++index){
+			term+=index++;
+			term+=week;
+			result+=term;
+		}
+		return result;
+	}
 };
+
+#include <iostream>
+int main(){
+	std::cout << Finance::finance(5000);
+}
