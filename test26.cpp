@@ -21,68 +21,67 @@ the output of the interpreted code (always as a string), produced by the . instr
 
 std::string brainLuck(std::string code, std::string input)
 {
-	if (CHAR_BIT != 8) throw std::domain_error(
-		"not supported on systems where a byte is not 8 bits");
-	std::string output;
-	std::array<unsigned char, 255> data{};
-	register unsigned char mar;	// memory address register
-	auto in = input.begin();
-	size_t missing;
-	for (auto it = code.cbegin(); it!=code.cend(); ++it){
-		switch(*it){
-			case '>': ++mar; break;
-			case '<': --mar; break;
-			case '+': ++data[mar]; break;
-			case '-': --data[mar]; break;
-			case '.': output+=data[mar]; break;
-			case ',': data[mar]= *in++; break;
-			case '[': 
-				if (!data[mar]){
-					missing = 1;
-					while(missing){
-						switch(*++it){
-							case '[': ++missing; break;
-							case ']': --missing; break;
-						}
-					}
-				}
-				break;
-			case ']': 
-				if (data[mar]){
-					missing = 1;
-					while(missing){
-						switch(*--it){
-							case ']': ++missing; break;
-							case '[': --missing; break;
-						}
-					}
-					
-				}
-				break; 
-		}
-	}
-	return output;
-	
+  if (CHAR_BIT != 8) throw std::domain_error(
+    "not supported on systems where a byte is not 8 bits");
+  std::string output;
+  std::array<unsigned char, 255> data{};
+  unsigned char mar;  // memory address register
+  auto in = input.begin();
+  size_t missing;
+  for (auto it = code.cbegin(); it!=code.cend(); ++it){
+    switch(*it){
+      case '>': ++mar; break;
+      case '<': --mar; break;
+      case '+': ++data[mar]; break;
+      case '-': --data[mar]; break;
+      case '.': output+=data[mar]; break;
+      case ',': data[mar]= *in++; break;
+      case '[': 
+        if (!data[mar]){
+          missing = 1;
+          while(missing){
+            switch(*++it){
+              case '[': ++missing; break;
+              case ']': --missing; break;
+            }
+          }
+        }
+        break;
+      case ']': 
+        if (data[mar]){
+          missing = 1;
+          while(missing){
+            switch(*--it){
+              case ']': ++missing; break;
+              case '[': --missing; break;
+            }
+          }
+          
+        }
+        break; 
+    }
+  }
+  return output;
 }
 
+
+// test
 #include <iostream>
 #include <chrono>
 
 int main(){
-	using namespace std::chrono;
-	/*std::string tw = "codewars";
-    tw.append(1,(char)255);
-    std::cout << brainLuck(",+[-.,+]",tw) << std::endl;*/
-    auto t1 = high_resolution_clock::now();
-    
-
-	
-    for (auto i = 1; i< 10000; ++i){
-		std::string mw = "codewars";
-		mw.append(1,(char)0);
-		/*std::cout << */brainLuck(",[.[-],]",mw);
-	}
-	auto t2 = high_resolution_clock::now();
-	duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
-	std::cout << time_span.count() << " seconds." << std::endl;
+  
+  /*std::string tw = "codewars";
+  tw.append(1,(char)255);
+  std::cout << brainLuck(",+[-.,+]",tw) << std::endl;*/
+  using namespace std::chrono;
+  auto t1 = high_resolution_clock::now();
+  for (auto i = 1; i< 10000; ++i){
+    std::string mw = "codewars";
+    mw.append(1,(char)0);
+    brainLuck(",[.[-],]",mw);
+  }
+  auto t2 = high_resolution_clock::now();
+  duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+  std::cout << time_span.count() << " seconds." << std::endl;
 }
